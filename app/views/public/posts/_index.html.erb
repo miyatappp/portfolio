@@ -1,0 +1,102 @@
+<div class="container">
+ <div class="row p-2">
+  <div class="col ">
+   <div class="d-flex flex-row align-items-center justify-content-center ">
+    <%= form_with url: search_posts_path, local: true, method: :get do |f| %>
+     <%= f.text_field :keyword ,value: params[:keyword] %>
+     <%= f.select :prefecture, options_for_select(Post.prefectures, :selected => params[:prefecture]) %>
+     <%= f.select :specific, ["本醸造", "吟醸", "大吟醸", "特別本醸造", "純米", "純米吟醸", "純米大吟醸", "特別純米" ], include_blank: "選択して下さい",selected: params[:specific] %>
+     <%= f.select :sort_by, [
+     ["投稿日が古い順", :old], ["投稿日が新しい順", :latest],
+     ["精米歩合が低い順", :polishing_low], ["精米歩合が高い順",:polishing_high],
+     ["点数が低い順", :score_low], ["点数高い順", :score_high], 
+     ["値段が安い順", :price_low], ["値段が高い順",:price_high],
+     ["香りの低い順", :scent_low], ["香りの高い順", :scent_high], 
+     ["味の淡い順", :taste_low], ["味の濃い順",:taste_high],
+     ["辛い順", :sweet_low], ["甘い順", :sweet_high], 
+     ["酸味の弱い順", :acidity_low], ["酸味の強い順",:acidity_high],
+     ["苦味の弱い順", :acidity_low], ["苦味の強い順", :bitter_high], 
+     ["旨味の弱い順", :umami_low], ["旨味の強い順",:umami_high],
+     ["アタック弱い順", :attack_low], ["アタック強い順", :attack_high], 
+     ["複雑性弱い", :complexity_low], ["複雑性強い順",:complexity_high],
+     ["含み香が低い順", :after_flavor_low], ["含み香が高い順", :after_flavor_high], 
+     ["余韻が短い順", :lingering_low], ["余韻が長い順",:lingering_high],
+     ["ラベルの良さ低い順", :label_low], ["ラベルの良さ高い順", :label_high], 
+     ["おすすめ度が低い順", :recommend_low], ["おすすめ度が高い順",:recommend_high],
+     ], include_blank: "選択して下さい",selected: params[:sort_by] %>
+     <%= f.submit "検索" %>
+    <% end %>
+   </div>
+  </div>
+ </div>
+ 
+ <div class="row">
+  <div class="col">
+   <% @posts.each do |post| %>
+    <div class="card mb-2">
+     <div class="row g-0">
+      <div class="col-2">
+       <%= link_to post_path(post.id) do %><%= image_tag post.get_image,src: "img.jpg",class:"img-fluid img-thumbnail", :size =>'130x130'%><% end %>
+      </div>
+      <div class="col-10">
+       <div class="card-body">
+        <table class="table table-borderless table-sm"> 
+         <tr>
+          <td> <%= link_to post_path(post.id), class:"card-link " do %><h5><%= post.sake %></h5><% end %></td>
+          <td>精米歩合:<%= post.polishing %>%</td>
+          <td>点数:<%= post.score %>点</td>
+          <td>飲酒量:<%= post.amount %>ml/<%= post.price %>円</td>
+          <td align="center">
+           <div>
+            <% if user_signed_in? %>
+             <% if post.bookmarked_by?(current_user) %>
+              <%= link_to post_bookmark_path(post), class:"btn btn-sm " , method: :delete do %>
+               <i class="fa-solid fa-bookmark"></i>
+              <% end %>
+             <% else %>
+              <%= link_to post_bookmark_path(post), class:"btn btn-sm " , method: :post do %>
+               <i class="fa-regular fa-bookmark"></i>
+              <% end %>
+             <% end %>
+            <% end %> 
+           </div>
+          </td>
+         </tr>
+         <tr>
+          <td>
+           <i class="fa-solid fa-user"></i>
+           <span class="badge">
+            <%= link_to user_path(post.user) do %>
+             <%= post.user.name %>
+            <% end %>
+           </span> 
+          </td>
+          <td colspan="3">
+           <span class="badge">香:<%= post.scent %></span>
+           <span class="badge">味:<%= post.taste %> </span>
+           <span class="badge">甘:<%= post.sweet %></span>
+           <span class="badge">酸:<%= post.acidity %></span>
+           <span class="badge">苦:<%= post.bitter %></span>
+           <span class="badge">旨:<%= post.umami %></span>
+           <span class="badge"><i class="fa-solid fa-burst"></i>:<%= post.attack %></span>
+           <span class="badge"><i class="fa-solid fa-question"></i>:<%= post.complexity %></span>
+           <span class="badge"><i class="fa-solid fa-wind"></i>:<%= post.after_flavor %></span>
+           <span class="badge"><i class="fa-solid fa-arrow-right-long"></i>:<%= post.lingering %></span>
+           <span class="badge"><i class="fa-solid fa-wine-bottle"></i>:<%= post.label %></span>
+           <span class="badge"><i class="fa-solid fa-star"></i>:<%= post.recommend %></span>
+           <span class="badge"><i class="fa-regular fa-comments"></i>:<%= post.post_comments.count %></span>
+          </td>
+          <td>
+           <small class="text-body-secondary"><%= post.created_at.strftime('%Y/%m/%d') %></small>
+          </td>
+         </tr>
+        </table>
+       </div>
+      </div>
+     </div>
+    </div>
+   <% end %>
+   <%= paginate @posts %>
+  </div>
+ </div>
+</div>

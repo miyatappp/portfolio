@@ -1,0 +1,187 @@
+<div class="container">
+ <div class="card mt-2 p-2">
+  <div class="row">
+   <div class="col-6">
+    <div>
+     <%= @post.created_at.strftime('%Y/%m/%d') %>
+     <i class="fa-solid fa-user"></i>
+     <span class="badge">
+      <%= link_to admin_user_path(@post.user) do %><%= @post.user.name %><% end %>
+     </span>
+    </div>
+     <%= image_tag @post.get_image,size: '500x500',class: "img-thumbnail aspect-square rounded-xl object-cover " %> 
+   </div>
+   <div class="col-6 p-2">
+    <table class="table table-sm table-borderless ">
+    <tr>
+     <td class="align-top"><h2><%= @post.sake %></h2></td>
+     <td class="align-top">
+     <h1> 
+    
+     
+       <%= link_to admin_post_path(@post), method: :delete, data: {confirm: "削除しますか？"}, class:"btn btn-danger" do %>管理者として削除<% end %>
+  
+     </h1>
+     </td>
+    </tr>  
+    </table>
+    
+    <table class="table table-sm ">
+     <tr>
+      <td>特定名称</td>
+      <th><%= @post.specific %></th>
+     </tr>
+     <tr>
+      <td>製造地</td>
+      <th><%= @post.prefecture %></th>
+     </tr>
+     <tr>
+      <td>精米歩合</td>
+      <th> <%= @post.polishing %>％</th>
+     </tr>
+     <tr>
+      <td>飲酒量</td>
+      <th><%= @post.amount %>ml/<%= @post.price %>円</th>
+     </tr>
+    </table>
+    
+    <canvas id="score"></canvas>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+     <script>
+      var ctx = document.getElementById("score");
+      var score = new Chart(ctx, {type: 'horizontalBar',
+                           data: {
+                                  labels: ['香り高さ', '味の濃さ', 'ラベルの良さ', 'おすすめ度',],
+                                  datasets: [{
+                                  label: '点数',
+                                  data: [<%= @post.scent %>,<%= @post.taste %> , <%= @post.label %>, <%= @post.recommend %>,],
+                                  backgroundColor: "rgba(145,150,152,0.4)",
+                                  borderColor: 'RGBA(145,150,152,1)',
+                                  }]},
+                            options: {layout: {padding: {top:-30}},
+                            title: {display: true,text: ''},
+                            scales: {xAxes: [{ticks: {suggestedMax: 10,suggestedMin: 0,stepSize: 1,callback: function(value, index, values){return  value +  ''}}}]},
+                         }});
+     </script>
+     <table class="table table-sm ">
+      <tr>
+       <td>総合点数</td>
+       <th><h2><%= @post.score %>点</h2>(100点中)</th>
+      </tr>
+     </table>
+    </div>
+   </div>
+  
+  <div class="row">
+   <div class="col-6">
+    <canvas id="mikaku"></canvas>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+      <script>
+       var ctx = document.getElementById("mikaku");
+       var mikaku = new Chart(ctx, {
+       type: 'radar', 
+       data: { 
+            labels: ["甘辛度", "酸味", "苦味", "旨味"],
+            datasets: [{
+                label: '',
+                data: [<%= @post.sweet %>, <%= @post.acidity %>, <%= @post.bitter %>, <%= @post.umami %>],
+                backgroundColor: 'RGBA(145,150,152,0.4)',
+                borderColor: 'RGBA(145,150,152,0.4)',
+                borderWidth: 1,
+                pointBackgroundColor: 'RGB(46,106,177)'
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: '味わい'
+            },
+            scale:{
+                ticks:{
+                    suggestedMin: 0,
+                    suggestedMax: 10,
+                    stepSize: 1,
+                    callback: function(value, index, values){
+                        return  value +  ''
+                    }
+                }
+            }
+        }
+    });
+    </script>
+   </div>
+   
+   <div class="col-6">     
+    <canvas id="aziwai"></canvas>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+      <script>
+       var ctx = document.getElementById("aziwai");
+       var aziwai = new Chart(ctx, {
+        type: 'radar', 
+        data: { 
+            labels: ["アタック・テクスチャー", "複雑性", "含み香・アフターフレーバー", "余韻"],
+            datasets: [{
+                label: '',
+                data: [<%= @post.attack %>, <%= @post.complexity %>, <%= @post.after_flavor %>, <%= @post.lingering %>],
+                backgroundColor: 'RGBA(145,150,152,0.4)',
+                borderColor: 'RGBA(145,150,152,0.4)',
+                borderWidth: 1,
+                pointBackgroundColor: 'RGB(46,106,177)'
+            }]
+         },
+         options: {
+            title: {
+                display: true,
+                text: '香り・風味'
+            },
+            scale:{
+                ticks:{
+                    suggestedMin: 0,
+                    suggestedMax: 10,
+                    stepSize: 1,
+                    callback: function(value, index, values){
+                        return  value +  ''
+                    }
+                }
+              }
+          }
+         });
+      </script>
+   </div>
+  </div>
+  
+ <div class="row">
+  <div class="col">
+   <h2>感想</h2>
+    <table class="table table-sm">
+     <tr>
+      <td><%= @post.impression %></td>
+     </tr>
+    </table>
+  
+    <h4>コメント件数：<%= @post.post_comments.count %></h4>
+    
+    <table class="table table-sm">
+     <% @post.post_comments.each do |post_comment| %>
+      <tr>
+       <th><%= link_to admin_user_path(post_comment.user) do %><%= post_comment.user.name %><% end %></th>
+       <td> <%= post_comment.comment %></td>
+       <td><%= post_comment.created_at.strftime('%Y/%m/%d') %></td>
+       
+       <td>
+        
+         <%= link_to  admin_post_post_comment_path(post_comment.post, post_comment), method: :delete, data: {confirm: "削除しますか？"}, class:"btn " do %>
+          <i class="fa-solid fa-trash"></i>
+         <% end %>
+       
+       </td>
+      </tr>
+     <% end %>
+    </table>
+   
+    <div>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>

@@ -1,0 +1,43 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  sake: MyString
+  specific: MyString
+  polishing: 1
+  prefecture: MyString
+  impression: MyText
+  score: 1
+  recommend: 1
+  attack: 1
+  scent: 1
+  taste: 1
+  sweet: 1
+  acidity: 1
+  bitter: 1
+  umami: 1
+  complexity: 1
+  after_flavor: 1
+  lingering: 1
+  label: 1
+  user: one
+
+two:
+  sake: MyString
+  specific: MyString
+  polishing: 1
+  prefecture: MyString
+  impression: MyText
+  score: 1
+  recommend: 1
+  attack: 1
+  scent: 1
+  taste: 1
+  sweet: 1
+  acidity: 1
+  bitter: 1
+  umami: 1
+  complexity: 1
+  after_flavor: 1
+  lingering: 1
+  label: 1
+  user: two

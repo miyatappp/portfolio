@@ -1,0 +1,17 @@
+<div class="container p-3">
+ <div class="row">
+  <div class="col">
+   <h1>会員情報編集</h1>
+   <%= render "public/shared/error_messages", resource: @user %>
+   <%= form_with model: @user do |f| %>
+    <table class="table">
+     <tr>
+      <th>名前</th>
+      <td><%= f.text_field :name, autofocus: true, placeholder:"名前"%></td>  
+      <td><%= f.submit "変更を保存", class:"btn btn-outline-success"%></td> 
+     </tr>
+    </table>
+   <% end %>
+  </div>
+ </div>
+</div>

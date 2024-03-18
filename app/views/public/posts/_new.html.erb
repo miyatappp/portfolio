@@ -1,0 +1,156 @@
+<div class="container p-3">
+ <div class="row">
+  <% if @post.errors.any? %>
+   <%= @post.errors.count %>件のエラーが発生しました
+    <ul>
+     <% @post.errors.full_messages.each do |message| %>
+      ●<%= message %>
+     <% end %>
+    </ul>
+  <% end %>
+ </div>
+  
+ <div class="row">
+  <div class="col-6">
+   <%= form_with model: @post, local:true do |f| %>
+    <table class="table table-borderless table-sm">
+     <tr>
+      <th>画像</th>
+      <td><%= f.file_field :image, accept: "image/*" %> </td>
+     </tr>
+  
+     <tr>
+      <th>銘柄</th>
+      <td><%= f.text_field :sake, placeholder:"銘柄" %></td>
+     </tr>
+     
+     <tr>
+      <th>製造地</th>
+      <td><%= f.select :prefecture, Post.prefectures.keys, {} %></td>
+     </tr>
+  
+     <tr>
+      <th>精米歩合</th>
+      <td> <%= f.number_field :polishing,placeholder:"00",in: 1..100 %>％</td>
+     </tr>
+     
+     <tr>
+      <th>特定名称</th>
+      <td><%= f.select :specific, ["本醸造", "吟醸", "大吟醸", "特別本醸造", "純米", "純米吟醸", "純米大吟醸", "特別純米" ], include_blank: "選択して下さい" %></td>
+     </tr>
+     
+     <tr>
+      <th>飲酒量</th>
+      <td><%= f.number_field :amount,placeholder:"",min: "1" %>ml</td>
+     </tr>
+     
+     <tr>
+      <th>金額</th>
+      <td><%= f.number_field :price,placeholder:"",min: "1" %>円</td>
+     </tr>
+    
+     <tr>
+      <th>点数</th>
+      <td> <%= f.number_field :score,placeholder:"",in: 1..100 %>/100</td>
+     </tr>
+     
+     <tr>
+      <th>感想</th>
+      <td><%= f.text_area :impression, class: "form-control", rows:"5", placeholder:"ここに感想を記入"%></td>
+     </tr>
+    </table>
+   </div>
+  
+  <div class="col-6">
+   <table class="table table-borderless table-sm">
+    <tr>
+     <th>香り高さ</th>
+     <td>低い(1)<%= f.range_field :scent, in: 1..10 %>(10)高い</td>
+    </tr>
+     
+    <tr>
+     <th>味の濃さ</th>
+     <td>淡い(1)<%= f.range_field :taste, in: 1..10 %>(10)濃い</td>
+    </tr>
+    
+    <tr>
+     <th>甘辛度</th>
+     <td>辛い(1)<%= f.range_field :sweet, in: 1..10 %>(10)甘い</td>
+    </tr>
+    
+    <tr>
+     <th>旨味</th>
+     <td>弱い(1)<%= f.range_field :umami, in: 1..10 %>(10)強い</td>
+    </tr>
+     
+    <tr>
+     <th>酸味</th>
+     <td>弱い(1)<%= f.range_field :acidity, in: 1..10 %>(10)強い</td>
+    </tr>
+     
+    <tr>
+     <th>苦味</th>
+     <td>弱い(1)<%= f.range_field :bitter, in: 1..10 %>(10)強い</td>
+    </tr>
+    
+    <tr>
+     <th>アタック<a href="#attack" data-toggle="collapse">▼</a></th>
+     <td>弱い(1)<%= f.range_field :attack, in: 1..10 %>(10)強い</td>
+    </tr>
+     
+    <tr>
+     <th colspan="2">
+      <div id="attack" class="collapse card mt-2 p-2">口に含んだ瞬間の印象の強さのこと。いきなり甘みや酸味が強く感じる場合がアタックが強いということになる。</div>
+     </th>
+    </tr>
+    
+    <tr>
+     <th>複雑性・クセの強さ<a href="#complexity" data-toggle="collapse">▼</a></th>
+     <td>弱い(1)<%= f.range_field :complexity, in: 1..10 %>(10)強い</td>
+    </tr>
+     
+    <tr>
+     <th colspan="2">
+      <div id="complexity" class="collapse card mt-2 p-2">淡麗や芳醇だけでなく味わいのトータルで判断する。</div>
+     </th>
+    </tr>
+     
+    <tr>
+     <th>アフターフレーバー<a href="#after_flavor" data-toggle="collapse">▼</a></th>
+     <td>低い(1)<%= f.range_field :after_flavor, in: 1..10 %>(10)高い</td>
+    </tr>
+     
+    <tr>
+     <th colspan="2">
+      <div id="after_flavor" class="collapse card mt-2 p-2">アフターフレーバーや含み香と呼ばれる。口に含んだ後、鼻へ戻る香りを指す。</div>
+     </th>
+    </tr>
+    
+    <tr>
+     <th>余韻の長さ<a href="#lingering" data-toggle="collapse">▼</a></th>
+     <td>短い(1)<%= f.range_field :lingering, in: 1..10 %>(10)長い</td>
+    </tr>
+     
+    <tr>
+     <th colspan="2">
+      <div id="lingering" class="collapse card mt-2 p-2">舌の上に残る味わいの中でも、旨味の持続性を重視。一般的に味わいとは、この余韻を指す場合が多いので重要な要素になっています</div>
+     </th>
+    </tr>
+     
+    <tr>
+     <th>おすすめ度</th>
+     <td  align="center">(1)<%= f.range_field :recommend, in: 1..10 %>(10)</td>
+    </tr>
+     
+    <tr>
+     <th>ラベルのおしゃれ度</th>
+     <td align="center">(1)<%= f.range_field :label, in: 1..10 %>(10)</td>
+    </tr>
+   </table>
+  </div>
+ </div>
+ <%= f.submit '投稿',class: "mt-5 btn btn-outline-success w-100"%> 
+ <% end %>
+</div>
+
+

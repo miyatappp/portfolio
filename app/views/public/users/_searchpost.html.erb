@@ -1,0 +1,47 @@
+  <div class="col">
+   <nav class="navbar">
+    <div class="d-flex flex-row align-items-center">
+     <div>
+      <%= link_to user_path(user),class:"btn btn-lg" do %>
+       <%= user.name %>
+      <% end %>
+     </div>
+     <div>
+      <% if user_signed_in? %>
+       <% if user == current_user %>
+        <%= link_to edit_user_path, class:"btn" do %><i class="fa-solid fa-user-gear"></i><% end %>
+       <% end %>
+      <% end %> 
+     </div>
+    </div>
+    
+    <div class="navbar ml-auto">
+     <div class="d-flex flex-row align-items-center align-end">
+       <%= form_with url: search_user_path, local: true, method: :get do |f| %>
+       <%= f.text_field :keyword ,value: params[:keyword] %>
+       <%= f.select :prefecture, options_for_select(Post.prefectures, :selected => params[:prefecture]) %>
+       <%= f.select :specific, ["本醸造", "吟醸", "大吟醸", "特別本醸造", "純米", "純米吟醸", "純米大吟醸", "特別純米" ], include_blank: "選択して下さい",selected: params[:specific] %>
+      
+       <%= f.select :sort_by, [["投稿日が古い順", :old], ["投稿日が新しい順", :latest],
+                              ["精米歩合が低い順", :polishing_low],["精米歩合が高い順",:polishing_high],
+                              ["点数が低い順", :score_low], ["点数高い順", :score_high], 
+                              ["値段が安い順", :price_low], ["値段が高い順",:price_high],
+                              ["香りの低い順", :scent_low], ["香りの高い順", :scent_high], 
+                              ["味の淡い順", :taste_low], ["味の濃い順",:taste_high],
+                              ["辛い順", :sweet_low], ["甘い順", :sweet_high],
+                              ["酸味の弱い順", :acidity_low], ["酸味の強い順",:acidity_high],
+                              ["苦味の弱い順", :acidity_low], ["苦味の強い順", :bitter_high], 
+                              ["旨味の弱い順", :umami_low], ["旨味の強い順",:umami_high],
+                              ["アタック弱い順", :attack_low], ["アタック強い順", :attack_high], 
+                              ["複雑性弱い", :complexity_low], ["複雑性強い順",:complexity_high],
+                              ["含み香が低い順", :after_flavor_low], ["含み香が高い順", :after_flavor_high],
+                              ["余韻が短い順", :lingering_low], ["余韻が長い順",:lingering_high],
+                              ["ラベルの良さ低い順", :label_low], ["ラベルの良さ高い順", :label_high], 
+                              ["おすすめ度が低い順", :recommend_low], ["おすすめ度が高い順",:recommend_high],
+                             ], include_blank: "選択して下さい",selected: params[:sort_by]  %>
+       <%= f.submit "検索" %>
+      <% end %>
+     </div>
+    </div>
+   </nav>
+  </div>

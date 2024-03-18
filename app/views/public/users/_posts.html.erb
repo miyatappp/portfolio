@@ -1,0 +1,63 @@
+<div class="col-10">
+ <% @posts.each do |post| %>
+  <div class="card mb-2">
+   <div class="row g-0">
+    <div class="col-2 ">
+     <%= link_to post_path(post.id) do %><%= image_tag post.get_image,src: "img.jpg",class:"img-fluid img-thumbnail", :size =>'130x130'%><% end %>
+    </div>
+    
+    <div class="col-10">
+     <div class="card-body">
+      <table class="table table-borderless table-sm"> 
+        <tr>
+         <td> <%= link_to post_path(post.id), class:"card-link " do %><h5><%= post.sake %></h5><% end %></td>
+         <td>精米歩合:<%= post.polishing %>%</td>
+         <td>点数:<%= post.score %>点</td>
+         <td>飲酒量:<%= post.amount %>ml/<%= post.price %>円</td>
+         <td align="center">
+          <div>
+           <% if user_signed_in? %>
+            <% if post.bookmarked_by?(current_user) %>
+             <%= link_to post_bookmark_path(post), class:"btn btn-sm " , method: :delete do %>
+              <i class="fa-solid fa-bookmark"></i>
+             <% end %>
+            <% else %>
+             <%= link_to post_bookmark_path(post), class:"btn btn-sm " , method: :post do %>
+              <i class="fa-regular fa-bookmark"></i>
+             <% end %>
+            <% end %>
+           <% end %> 
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <i class="fa-solid fa-user"></i><span class="badge"><%= link_to user_path(post.user) do %><%= post.user.name %><% end %></span> 
+         </td>
+         <td colspan="3">
+          <span class="badge">香:<%= post.scent %></span>
+          <span class="badge">味:<%= post.taste %> </span>
+          <span class="badge">甘:<%= post.sweet %></span>
+          <span class="badge">酸:<%= post.acidity %></span>
+          <span class="badge">苦:<%= post.bitter %></span>
+          <span class="badge">旨:<%= post.umami %></span>
+          <span class="badge"><i class="fa-solid fa-burst"></i>:<%= post.attack %></span>
+          <span class="badge"><i class="fa-solid fa-question"></i>:<%= post.complexity %></span>
+          <span class="badge"><i class="fa-solid fa-wind"></i>:<%= post.after_flavor %></span>
+          <span class="badge"><i class="fa-solid fa-arrow-right-long"></i>:<%= post.lingering %></span>
+          <span class="badge"><i class="fa-solid fa-wine-bottle"></i>:<%= post.label %></span>
+          <span class="badge"><i class="fa-solid fa-star"></i>:<%= post.recommend %></span>
+          <span class="badge"><i class="fa-regular fa-comments"></i>:<%= post.post_comments.count %></span>
+         </td>
+         <td>
+          <small class="text-body-secondary"><%= post.created_at.strftime('%Y/%m/%d') %></small>
+         </td>
+        </tr>
+      </table>
+     </div>
+    </div>
+   </div>
+  </div>
+ <% end %>
+ <%= paginate @posts %>
+</div>

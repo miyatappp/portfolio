@@ -1,0 +1,32 @@
+<div class="container">
+ 
+ <div class="row">
+  <div class="col">
+   <nav class="navbar">
+    <div class="d-flex flex-row align-items-center">
+     <div>
+      <%= link_to user_path(@user),class:"btn btn-lg" do %>
+       <%= @user.name %>
+      <% end %>
+     </div>
+     <div>
+      <% if user_signed_in? %>
+       <% if @user == current_user %>
+        <%= link_to edit_user_path, class:"btn" do %><i class="fa-solid fa-user-gear"></i><% end %>
+       <% end %>
+      <% end %> 
+     </div>
+    </div>
+    <div class="navbar ml-auto">
+     <h2><%= @user.name %>のフォロワー</h2>
+    </div>
+   </nav>
+  </div>
+ </div>
+ 
+ <div class="row">
+  <%= render 'mypage', posts: @posts, user: @user %>
+  <%= render 'follow', follow: @followers %>
+ </div>
+ 
+</div>
